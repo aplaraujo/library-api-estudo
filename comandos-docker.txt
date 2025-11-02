@@ -1,0 +1,17 @@
+docker run --name librarydb -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=library -d postgres:18-alpine
+
+docker run --name pgadmin4 -p 15432:80 -e PGADMIN_DEFAULT_EMAIL=admin@admin.com -e PGADMIN_DEFAULT_PASSWORD=admin -d dpage/pgadmin4:9.9.0
+
+Comando para interromper o contêiner: docker stop id-do-container ou nome-do-container
+
+Comando para excluir o contêiner: docker container rm nome-do-container
+
+Comando para criar rede entre contêineres: docker network create nome-da-rede
+
+docker run --name librarydb -p 5432:5432 -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=library -d --network nome-da-rede postgres:18-alpine
+
+docker run --name pgadmin4 -p 15432:80 -e PGADMIN_DEFAULT_EMAIL=admin@admin.com -e PGADMIN_DEFAULT_PASSWORD=admin -d --network nome-da-rede dpage/pgadmin4:9.9.0
+
+Referência da rede do Docker no Pgadmin4: nome-do-contêiner do banco de dados
+
+Verificar porta: netstat -aof | findstr 5432
