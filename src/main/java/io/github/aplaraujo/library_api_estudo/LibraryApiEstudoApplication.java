@@ -7,7 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class LibraryApiEstudoApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(LibraryApiEstudoApplication.class, args);
+
+        SpringApplication.run(LibraryApiEstudoApplication.class, args);
+
 	}
+
 
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @Getter // Anotação que gera métodos "getter" em tempo de compilação
 @Setter // Anotação que gera métodos "setter" em tempo de compilação
 @NoArgsConstructor
+@ToString
 public class Autor {
     @Id
     @Column(name = "id")
@@ -30,6 +32,7 @@ public class Autor {
     @Column(name = "nacionalidade", length = 50, nullable = false)
     private String nacionalidade;
 
-    @OneToMany(mappedBy = "autor") // Um livro para um autor
+    // @OneToMany(mappedBy = "autor") // Um livro para um autor
+    @Transient
     private List<Livro> livros = new ArrayList<>();
 }
