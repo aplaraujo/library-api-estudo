@@ -26,7 +26,7 @@ public class Livro {
     @Column(name = "titulo", length = 150, nullable = false)
     private String titulo;
 
-    @Column(name = "data_nascimento", nullable = false)
+    @Column(name = "data_publicacao")
     private LocalDate dataPublicacao;
 
     @Enumerated(EnumType.STRING)
@@ -37,8 +37,11 @@ public class Livro {
     private BigDecimal preco;
 
     // CascadeType.ALL - Qualquer operação que foi feita vai trazer o autor junto
-    @ManyToOne(cascade = CascadeType.ALL) // Muitos livros para um autor
-    @JoinColumn(name = "id_autor")
+    // Fetch - Como trazer as informações do autor em um relacionamento de muitos para um
+    // FetchType.EAGER - comportamento padrão de um relacionamento de muitos para um
+    // FetchType.LAZY - traz apenas os dados do livro, não traz os dados do autor
+    @ManyToOne(fetch = FetchType.LAZY) // Muitos livros para um autor
+    @JoinColumn(name = "id_autor", nullable = true)
     private Autor autor;
 
 }

@@ -6,6 +6,7 @@ import io.github.aplaraujo.library_api_estudo.model.Livro;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -70,4 +71,18 @@ class LivroRepositoryTest {
         UUID id = UUID.fromString("9f3379fd-d321-4887-83ca-695265275b3f");
         livroRepository.deleteById(id);
     }
+
+    @Test
+    @Transactional // Abriu uma janela para operar transaçoes com o banco de dados
+    void buscarLivroTest() {
+        UUID id = UUID.fromString("d669f26f-c368-42eb-aab0-37b9e735694f");
+        Livro livro = livroRepository.findById(id).orElse(null);
+        System.out.println("Nome do livro: ");
+        System.out.println(livro.getTitulo());
+
+        System.out.println("Nome do autor: ");
+        System.out.println(livro.getAutor().getNome());
+    }
+
+
 }

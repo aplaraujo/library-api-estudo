@@ -32,7 +32,6 @@ public class Autor {
     @Column(name = "nacionalidade", length = 50, nullable = false)
     private String nacionalidade;
 
-    // @OneToMany(mappedBy = "autor") // Um livro para um autor
-    @Transient
-    private List<Livro> livros = new ArrayList<>();
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL) // Um livro para um autor
+    private List<Livro> livros;
 }
