@@ -105,5 +105,27 @@ class LivroRepositoryTest {
         lista.forEach(System.out::println);
     }
 
+    @Test
+    void listaLivrosComQueryJPQL() {
+        var resultado = livroRepository.listaLivros();
+        resultado.forEach(System.out::println);
+    }
 
+    @Test
+    void listaAutoresDosLivros() {
+        var resultado = livroRepository.listaAutoresDosLivros();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listaTitulosDosLivros() {
+        var resultado = livroRepository.listaNomesDiferentesLivros();
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listaGenerosDosLivros() {
+        var resultado = livroRepository.listaGenerosAutoresBrasileiros();
+        resultado.forEach(System.out::println);
+    }
 }
