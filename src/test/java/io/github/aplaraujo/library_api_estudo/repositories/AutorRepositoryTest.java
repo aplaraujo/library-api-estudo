@@ -6,6 +6,7 @@ import io.github.aplaraujo.library_api_estudo.model.Livro;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -98,5 +99,15 @@ public class AutorRepositoryTest {
 
         // Salva apenas o autor - os livros serão salvos automaticamente!
         autorRepository.save(autor);
+    }
+
+    @Test
+    void listaLivrosAutor() {
+        UUID id = UUID.fromString("a2405ad1-ec59-43da-8379-f802e5d32a22");
+        var autorId = autorRepository.findById(id).get();
+        // Buscar os livros do autor
+        List<Livro> livros = livroRepository.findByAutor(autorId);
+        autorId.setLivros(livros);
+        autorId.getLivros().forEach(System.out::println);
     }
 }

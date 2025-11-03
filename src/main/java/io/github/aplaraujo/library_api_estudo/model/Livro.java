@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @Data // Anotação que cria outras anotações do Lombok: @Getter, @Setter, @ToString, @EqualsAndHashCode, @RequiredArgsConstructor
 @NoArgsConstructor // Anotaçao que cria um construtor sem argumentos
 @AllArgsConstructor // Anotação que cria um construtor com todas as propriedades
+@ToString(exclude = "autor")
 public class Livro {
     @Id
     @Column(name = "id")
@@ -41,7 +43,7 @@ public class Livro {
     // FetchType.EAGER - comportamento padrão de um relacionamento de muitos para um
     // FetchType.LAZY - traz apenas os dados do livro, não traz os dados do autor
     @ManyToOne(fetch = FetchType.LAZY) // Muitos livros para um autor
-    @JoinColumn(name = "id_autor", nullable = true)
+    @JoinColumn(name = "id_autor")
     private Autor autor;
 
 }

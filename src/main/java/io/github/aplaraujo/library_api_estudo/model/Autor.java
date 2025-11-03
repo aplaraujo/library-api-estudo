@@ -16,7 +16,7 @@ import java.util.UUID;
 @Getter // Anotação que gera métodos "getter" em tempo de compilação
 @Setter // Anotação que gera métodos "setter" em tempo de compilação
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "livros")
 public class Autor {
     @Id
     @Column(name = "id")
@@ -32,6 +32,6 @@ public class Autor {
     @Column(name = "nacionalidade", length = 50, nullable = false)
     private String nacionalidade;
 
-    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL) // Um livro para um autor
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Um livro para um autor
     private List<Livro> livros;
 }
