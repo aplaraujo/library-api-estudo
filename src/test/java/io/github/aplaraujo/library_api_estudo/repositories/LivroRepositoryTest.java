@@ -6,6 +6,7 @@ import io.github.aplaraujo.library_api_estudo.model.Livro;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -131,13 +132,38 @@ class LivroRepositoryTest {
 
     @Test
     void listaPorGeneroQueryParamTest() {
-        var resultado = livroRepository.findByGenero(GeneroLivro.BIOGRAFIA, "dataPublicacao");
+        // Usando o método com Sort dinâmico
+        var resultado = livroRepository.findByGenero(
+                GeneroLivro.BIOGRAFIA,
+                Sort.by("dataPublicacao")
+        );
         resultado.forEach(System.out::println);
     }
 
     @Test
-    void listaPorGeneroQueryParamPositionalTest() {
-        var resultado = livroRepository.findByGeneroPositional(GeneroLivro.BIOGRAFIA, "preco");
+    void listaPorGeneroComPrecoTest() {
+        // Ordenando por preço descendente
+        var resultado = livroRepository.findByGenero(
+                GeneroLivro.BIOGRAFIA,
+                Sort.by("preco").descending()
+        );
         resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void listaPorGeneroOrdenacaoFixaTest() {
+        // Se criou o método com ordenação fixa
+        var resultado = livroRepository.findByGeneroOrdenadoPorData(GeneroLivro.BIOGRAFIA);
+        resultado.forEach(System.out::println);
+    }
+
+    @Test
+    void deletePorGeneroTest() {
+        livroRepository.deleteByGenero(GeneroLivro.BIOGRAFIA);
+    }
+
+    @Test
+    void updateDataPublicacaoTest() {
+        livroRepository.updateDataPublicacao(LocalDate.of(2010, 12, 1));
     }
 }

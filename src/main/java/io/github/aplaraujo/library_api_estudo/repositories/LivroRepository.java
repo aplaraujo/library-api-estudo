@@ -3,9 +3,12 @@ package io.github.aplaraujo.library_api_estudo.repositories;
 import io.github.aplaraujo.library_api_estudo.model.Autor;
 import io.github.aplaraujo.library_api_estudo.model.GeneroLivro;
 import io.github.aplaraujo.library_api_estudo.model.Livro;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -53,11 +56,24 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
             """)
     List<String> listaGenerosAutoresBrasileiros();
 
-    // Named parameters - Parâmetros nomeados
-    @Query("select l from Livro l where l.genero = :gênero order by :paramOrdenacao")
-    List<Livro> findByGenero(@Param("genero") GeneroLivro generoLivro, @Param("paramOrdenacao") String nomePropriedade);
+    // OPÇÃO 1: Com ordenação fixa
+    @Query("select l from Livro l where l.genero = :genero order by l.dataPublicacao")
+    List<Livro> findByGeneroOrdenadoPorData(@Param("genero") GeneroLivro generoLivro);
 
-    // Positional parameters - Parâmetros por posição
-    @Query("select l from Livro l where l.genero = ?1 order by ?2")
-    List<Livro> findByGeneroPositional(GeneroLivro generoLivro, String nomePropriedade);
+    // OPÇÃO 2: Com ordenação dinâmica usando Sort (RECOMENDADO)
+    @Query("select l from Livro l where l.genero = :genero")
+    List<Livro> findByGenero(@Param("genero") GeneroLivro generoLivro, Sort sort);
+
+    // OPÇÃO 3: Query Method sem @Query (também aceita Sort)
+    List<Livro> findByGeneroOrderByDataPublicacao(GeneroLivro genero);
+
+    @Modifying // Anotação para operações de escrita
+    @Transactional
+    @Query("delete from Livro where genero = ?1")
+    void deleteByGenero(GeneroLivro genero);
+
+    @Modifying // Anotação para operações de escrita
+    @Transactional
+    @Query("update Livro set dataPublicacao = ?1")
+    void updateDataPublicacao(LocalDate novaData);
 }
