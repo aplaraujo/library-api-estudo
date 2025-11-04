@@ -23,20 +23,20 @@ class LivroRepositoryTest {
     @Autowired
     AutorRepository autorRepository;
 
-//    @Test
-//    void salvarTest() {
-//        Livro livro = new Livro();
-//        livro.setIsbn("9781234567897");
-//        livro.setPreco(BigDecimal.valueOf(100));
-//        livro.setGenero(GeneroLivro.FICCAO);
-//        livro.setTitulo("Eu vi um ET");
-//        livro.setDataPublicacao(LocalDate.of(1990, 1, 1));
-//
-//        Autor autor = autorRepository.findById(UUID.fromString("377d69c4-b50a-4bb6-b146-b81bcd6ac8a4")).orElse(null);
-//        livro.setAutor(autor);
-//
-//        livroRepository.save(livro);
-//    }
+    @Test
+    void salvarTest() {
+        Livro livro = new Livro();
+        livro.setIsbn("9781234567897");
+        livro.setPreco(BigDecimal.valueOf(100));
+        livro.setGenero(GeneroLivro.FICCAO);
+        livro.setTitulo("Eu vi um ET");
+        livro.setDataPublicacao(LocalDate.of(1990, 1, 1));
+
+        Autor autor = autorRepository.findById(UUID.fromString("2030d35e-4e7a-4595-9a6e-0b686b98cc15")).orElse(null);
+        livro.setAutor(autor);
+
+        livroRepository.save(livro);
+    }
 
     // Operação em cascata: não é recomendada para projetos em produção!
     @Test

@@ -1,13 +1,11 @@
 package io.github.aplaraujo.library_api_estudo.services;
 
-import io.github.aplaraujo.library_api_estudo.dto.AutorDTO;
+import io.github.aplaraujo.library_api_estudo.exceptions.OperacaoNaoPermitidaException;
 import io.github.aplaraujo.library_api_estudo.model.Autor;
 import io.github.aplaraujo.library_api_estudo.repositories.AutorRepository;
-import org.springframework.http.ResponseEntity;
+import io.github.aplaraujo.library_api_estudo.repositories.LivroRepository;
+import io.github.aplaraujo.library_api_estudo.validators.AutorValidator;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,13 +14,18 @@ import java.util.UUID;
 @Service
 public class AutorService {
 
-    public AutorRepository autorRepository;
+    private final AutorRepository autorRepository;
+    private final AutorValidator autorValidator;
+    private final LivroRepository livroRepository;
 
-    public AutorService(AutorRepository autorRepository) {
+    public AutorService(AutorRepository autorRepository, AutorValidator autorValidator, LivroRepository livroRepository) {
         this.autorRepository = autorRepository;
+        this.autorValidator = autorValidator;
+        this.livroRepository = livroRepository;
     }
 
     public Autor salvar(Autor autor) {
+        autorValidator.validar(autor);
         return autorRepository.save(autor);
     }
 
@@ -31,6 +34,9 @@ public class AutorService {
     }
 
     public void excluir(Autor autor) {
+        if (possuiLivro(autor)) {
+            throw new OperacaoNaoPermitidaException("Esse autor possui livros cadastrados!");
+        }
         autorRepository.delete(autor);
     }
 
@@ -55,6 +61,12 @@ public class AutorService {
         if (autor.getId() == null) {
             throw new IllegalArgumentException("Autor não encontrado!");
         }
+        autorValidator.validar(autor);
         autorRepository.save(autor);
+    }
+
+    // Verificar se o autor possui algum livro publicado
+    public boolean possuiLivro(Autor autor) {
+        return livroRepository.existsByAutor(autor);
     }
 }
