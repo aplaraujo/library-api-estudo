@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/autores") // http://localhost:8080/autores
@@ -44,5 +46,23 @@ public class AutorController { // Camada de entrada de dados do sistema
             return ResponseEntity.ok().body(dto);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> excluirAutor(@PathVariable String id) {
+        var idAutor = UUID.fromString(id);
+        Optional<Autor> autor = autorService.obterPorId(idAutor);
+        if (autor.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        autorService.excluir(autor.get());
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<AutorDTO>> pesquisar(@RequestParam(value = "nome", required = false) String nome, @RequestParam(value = "nacionalidade", required = false) String nacionalidade) {
+        List<Autor> lista = autorService.pesquisa(nome,nacionalidade);
+        List<AutorDTO> dto = lista.stream().map(autor -> new AutorDTO(autor.getId(), autor.getNome(), autor.getDataNascimento(), autor.getNacionalidade())).collect(Collectors.toList());
+        return ResponseEntity.ok(dto);
     }
 }
