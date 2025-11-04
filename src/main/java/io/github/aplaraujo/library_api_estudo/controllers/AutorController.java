@@ -5,13 +5,12 @@ import io.github.aplaraujo.library_api_estudo.model.Autor;
 import io.github.aplaraujo.library_api_estudo.services.AutorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/autores") // http://localhost:8080/autores
@@ -33,5 +32,17 @@ public class AutorController { // Camada de entrada de dados do sistema
         autorService.salvar(autor);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(autor.getId()).toUri();
         return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<AutorDTO> obterDetalhes(@PathVariable("id") String id) {
+        var idAutor = UUID.fromString(id);
+        Optional<Autor> autor = autorService.obterPorId(idAutor);
+        if (autor.isPresent()) {
+            Autor entidade = autor.get();
+            AutorDTO dto = new AutorDTO(entidade.getId(), entidade.getNome(), entidade.getDataNascimento(), entidade.getNacionalidade());
+            return ResponseEntity.ok().body(dto);
+        }
+        return ResponseEntity.notFound().build();
     }
 }
