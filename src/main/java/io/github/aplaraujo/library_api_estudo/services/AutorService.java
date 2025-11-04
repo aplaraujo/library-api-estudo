@@ -1,8 +1,13 @@
 package io.github.aplaraujo.library_api_estudo.services;
 
+import io.github.aplaraujo.library_api_estudo.dto.AutorDTO;
 import io.github.aplaraujo.library_api_estudo.model.Autor;
 import io.github.aplaraujo.library_api_estudo.repositories.AutorRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,5 +48,13 @@ public class AutorService {
         }
 
         return autorRepository.findAll();
+    }
+
+
+    public void atualizar(Autor autor) {
+        if (autor.getId() == null) {
+            throw new IllegalArgumentException("Autor não encontrado!");
+        }
+        autorRepository.save(autor);
     }
 }

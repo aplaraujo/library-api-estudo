@@ -65,4 +65,21 @@ public class AutorController { // Camada de entrada de dados do sistema
         List<AutorDTO> dto = lista.stream().map(autor -> new AutorDTO(autor.getId(), autor.getNome(), autor.getDataNascimento(), autor.getNacionalidade())).collect(Collectors.toList());
         return ResponseEntity.ok(dto);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> atualizar(@PathVariable String id, @RequestBody AutorDTO dto) {
+        var idAutor = UUID.fromString(id);
+        Optional<Autor> autor = autorService.obterPorId(idAutor);
+
+        if (autor.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        var resultado = autor.get();
+        resultado.setNome(dto.nome());
+        resultado.setDataNascimento(dto.dataNascimento());
+        resultado.setNacionalidade(dto.nacionalidade());
+        autorService.atualizar(resultado);
+        return ResponseEntity.noContent().build();
+    }
 }
