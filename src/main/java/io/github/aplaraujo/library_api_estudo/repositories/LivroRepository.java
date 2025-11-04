@@ -15,10 +15,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * @see LivroRepositoryTest
- */
-
 public interface LivroRepository extends JpaRepository<Livro, UUID> {
     // select * from livro where id_autor = id
     List<Livro> findByAutor(Autor autor);
