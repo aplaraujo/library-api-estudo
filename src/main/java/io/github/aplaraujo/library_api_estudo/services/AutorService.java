@@ -5,6 +5,7 @@ import io.github.aplaraujo.library_api_estudo.model.Autor;
 import io.github.aplaraujo.library_api_estudo.repositories.AutorRepository;
 import io.github.aplaraujo.library_api_estudo.repositories.LivroRepository;
 import io.github.aplaraujo.library_api_estudo.validators.AutorValidator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,17 +13,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor // Cria um construtor com campos obrigatórios
 public class AutorService {
 
     private final AutorRepository autorRepository;
     private final AutorValidator autorValidator;
     private final LivroRepository livroRepository;
-
-    public AutorService(AutorRepository autorRepository, AutorValidator autorValidator, LivroRepository livroRepository) {
-        this.autorRepository = autorRepository;
-        this.autorValidator = autorValidator;
-        this.livroRepository = livroRepository;
-    }
 
     public Autor salvar(Autor autor) {
         autorValidator.validar(autor);
