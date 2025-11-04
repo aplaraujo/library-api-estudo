@@ -1,13 +1,13 @@
 package io.github.aplaraujo.library_api_estudo.controllers;
 
-import io.github.aplaraujo.library_api_estudo.dto.AutorDTO;
-import io.github.aplaraujo.library_api_estudo.dto.ErroResposta;
+import io.github.aplaraujo.library_api_estudo.controllers.dto.AutorDTO;
+import io.github.aplaraujo.library_api_estudo.controllers.dto.ErroResposta;
 import io.github.aplaraujo.library_api_estudo.exceptions.OperacaoNaoPermitidaException;
 import io.github.aplaraujo.library_api_estudo.exceptions.RegistroDuplicadoException;
 import io.github.aplaraujo.library_api_estudo.model.Autor;
 import io.github.aplaraujo.library_api_estudo.services.AutorService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -24,12 +24,12 @@ import java.util.stream.Collectors;
 public class AutorController { // Camada de entrada de dados do sistema
 
     private final AutorService autorService;
-    
+
     // Formas de criar uma requisição
     // Response Entity - classe que representa uma resposta a uma requisição
 //    @RequestMapping(method = RequestMethod.POST)
     @PostMapping
-    public ResponseEntity<Object> salvar(@RequestBody AutorDTO dto) {
+    public ResponseEntity<Object> salvar(@RequestBody @Valid AutorDTO dto) {
         try {
             Autor autor = dto.mapearParaAutor();
             autorService.salvar(autor);

@@ -1,4 +1,4 @@
-package io.github.aplaraujo.library_api_estudo.dto;
+package io.github.aplaraujo.library_api_estudo.controllers.dto;
 
 import org.springframework.http.HttpStatus;
 
