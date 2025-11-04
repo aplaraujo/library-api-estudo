@@ -1,0 +1,18 @@
+package io.github.aplaraujo.library_api_estudo.controllers.dto;
+
+import io.github.aplaraujo.library_api_estudo.model.GeneroLivro;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.UUID;
+
+public record PesquisaLivroDTO(
+        UUID id,
+        String isbn,
+        String titulo,
+        LocalDate dataPublicacao,
+        GeneroLivro genero,
+        BigDecimal preco,
+        AutorDTO autorDTO
+) {
+}

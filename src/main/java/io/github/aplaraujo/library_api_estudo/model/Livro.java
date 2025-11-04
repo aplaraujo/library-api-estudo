@@ -5,9 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -16,6 +20,7 @@ import java.util.UUID;
 @NoArgsConstructor // Anotaçao que cria um construtor sem argumentos
 @AllArgsConstructor // Anotação que cria um construtor com todas as propriedades
 @ToString(exclude = "autor")
+@EntityListeners(AuditingEntityListener.class)
 public class Livro {
     @Id
     @Column(name = "id")
@@ -45,5 +50,17 @@ public class Livro {
     @ManyToOne(fetch = FetchType.LAZY) // Muitos livros para um autor
     @JoinColumn(name = "id_autor")
     private Autor autor;
+
+    // Timestamp - guarda data e hora
+    @CreatedDate // Inclusão de data e hora atuais no banco de dados
+    @Column(name = "data_cadastro")
+    private LocalDateTime dataCadastro;
+
+    @LastModifiedDate // Atualização automática da data e hora
+    @Column(name = "data_atualizacao")
+    private LocalDateTime dataAtualizacao;
+
+    @Column(name = "id_usuario")
+    private UUID idUsuario;
 
 }
