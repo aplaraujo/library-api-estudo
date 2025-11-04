@@ -5,8 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -17,6 +21,7 @@ import java.util.UUID;
 @Setter // Anotação que gera métodos "setter" em tempo de compilação
 @NoArgsConstructor
 @ToString(exclude = "livros")
+@EntityListeners(AuditingEntityListener.class) // A classe escuta operações na entidade
 public class Autor {
     @Id
     @Column(name = "id")
@@ -34,4 +39,16 @@ public class Autor {
 
     @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Um livro para um autor
     private List<Livro> livros;
+
+    // Timestamp - guarda data e hora
+    @CreatedDate // Inclusão de data e hora atuais no banco de dados
+    @Column(name = "data_cadastro")
+    private LocalDateTime dataCadastro;
+
+    @LastModifiedDate // Atualização automática da data e hora
+    @Column(name = "data_atualizacao")
+    private LocalDateTime dataAtualizacao;
+
+    @Column(name = "id_usuario")
+    private UUID idUsuario;
 }
