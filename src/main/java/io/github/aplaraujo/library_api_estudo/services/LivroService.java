@@ -4,6 +4,8 @@ import io.github.aplaraujo.library_api_estudo.model.GeneroLivro;
 import io.github.aplaraujo.library_api_estudo.model.Livro;
 import io.github.aplaraujo.library_api_estudo.repositories.LivroRepository;
 import static io.github.aplaraujo.library_api_estudo.repositories.specs.LivroSpecs.*;
+
+import io.github.aplaraujo.library_api_estudo.validators.LivroValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -16,8 +18,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class LivroService {
     private final LivroRepository livroRepository;
+    private final LivroValidator livroValidator;
 
     public Livro salvar(Livro livro) {
+        livroValidator.validar(livro);
         return livroRepository.save(livro);
     }
 
@@ -55,5 +59,13 @@ public class LivroService {
         }
 
         return livroRepository.findAll();
+    }
+
+    public void atualizar(Livro livro) {
+        if (livro.getId() == null) {
+            throw new IllegalArgumentException("Livro não encontrado!");
+        }
+        livroValidator.validar(livro);
+        livroRepository.save(livro);
     }
 }

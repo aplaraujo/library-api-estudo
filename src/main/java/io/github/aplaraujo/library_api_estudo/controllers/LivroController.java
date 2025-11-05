@@ -5,6 +5,7 @@ import io.github.aplaraujo.library_api_estudo.controllers.dto.ErroResposta;
 import io.github.aplaraujo.library_api_estudo.controllers.dto.PesquisaLivroDTO;
 import io.github.aplaraujo.library_api_estudo.controllers.mappers.LivroMapper;
 import io.github.aplaraujo.library_api_estudo.exceptions.RegistroDuplicadoException;
+import io.github.aplaraujo.library_api_estudo.model.Autor;
 import io.github.aplaraujo.library_api_estudo.model.GeneroLivro;
 import io.github.aplaraujo.library_api_estudo.model.Livro;
 import io.github.aplaraujo.library_api_estudo.services.LivroService;
@@ -71,5 +72,20 @@ public class LivroController implements GenericController {
         var resultado = livroService.pesquisa(isbn, nomeAutor, titulo, genero, anoPublicacao);
         var lista = resultado.stream().map(livroMapper::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(lista);
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Object> atualizar(@PathVariable("id") String id, @RequestBody @Valid CadastroLivroDTO dto) {
+        return livroService.obterPorId(UUID.fromString(id)).map(livro -> {
+            Livro entity = livroMapper.toEntity(dto);
+            livro.setDataPublicacao(entity.getDataPublicacao());
+            livro.setIsbn(entity.getIsbn());
+            livro.setPreco(entity.getPreco());
+            livro.setGenero(entity.getGenero());
+            livro.setTitulo(entity.getTitulo());
+
+            livroService.atualizar(livro);
+            return ResponseEntity.noContent().build();
+        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

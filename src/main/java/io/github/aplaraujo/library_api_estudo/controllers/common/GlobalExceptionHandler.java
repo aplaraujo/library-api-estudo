@@ -2,6 +2,7 @@ package io.github.aplaraujo.library_api_estudo.controllers.common;
 
 import io.github.aplaraujo.library_api_estudo.controllers.dto.ErroCampo;
 import io.github.aplaraujo.library_api_estudo.controllers.dto.ErroResposta;
+import io.github.aplaraujo.library_api_estudo.exceptions.CampoInvalidoException;
 import io.github.aplaraujo.library_api_estudo.exceptions.OperacaoNaoPermitidaException;
 import io.github.aplaraujo.library_api_estudo.exceptions.RegistroDuplicadoException;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErroResposta handleOperacaoNaoPermitidaException(OperacaoNaoPermitidaException e) {
         return ErroResposta.respostaPadrao(e.getMessage());
+    }
+
+    @ExceptionHandler(CampoInvalidoException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErroResposta handleCampoInvalidException(CampoInvalidoException e) {
+        return new ErroResposta(HttpStatus.UNPROCESSABLE_ENTITY.value(), "Erro de validação", List.of(new ErroCampo(e.getCampo(), e.getMessage())));
     }
 
     @ExceptionHandler(RuntimeException.class)
