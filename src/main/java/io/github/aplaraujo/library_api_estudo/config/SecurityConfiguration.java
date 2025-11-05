@@ -23,10 +23,13 @@ public class SecurityConfiguration {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(configurer -> {
-                    configurer.loginPage("/login").permitAll();
+                    configurer.loginPage("/login");
                 })
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(http -> {
+                    http.requestMatchers("/login/**").permitAll();
+                    http.requestMatchers("/autores/**").hasRole("ADMIN");
+                    http.requestMatchers("/livros/**").hasAnyRole("USER", "ADMIN");
                     http.anyRequest().authenticated();
                 })
                 .build();
