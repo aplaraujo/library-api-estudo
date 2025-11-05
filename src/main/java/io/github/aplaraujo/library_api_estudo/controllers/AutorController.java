@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/autores") // http://localhost:8080/autores
 @RequiredArgsConstructor
-public class AutorController implements GenericController{ // Camada de entrada de dados do sistema
+public class AutorController implements GenericController { // Camada de entrada de dados do sistema
 
     private final AutorService autorService;
     private final AutorMapper autorMapper;
@@ -31,16 +31,12 @@ public class AutorController implements GenericController{ // Camada de entrada 
     // Response Entity - classe que representa uma resposta a uma requisição
 //    @RequestMapping(method = RequestMethod.POST)
     @PostMapping
-    public ResponseEntity<Object> salvar(@RequestBody @Valid AutorDTO dto) {
-        try {
-            Autor autor = autorMapper.toEntity(dto);
-            autorService.salvar(autor);
-            URI location = gerarHeaderLocation(autor.getId());
-            return ResponseEntity.created(location).build();
-        } catch (RegistroDuplicadoException e) {
-            var erroDTO = ErroResposta.conflito(e.getMessage());
-            return ResponseEntity.status(erroDTO.status()).body(erroDTO);
-        }
+    public ResponseEntity<Void> salvar(@RequestBody @Valid AutorDTO dto) {
+        Autor autor = autorMapper.toEntity(dto);
+        autorService.salvar(autor);
+        URI location = gerarHeaderLocation(autor.getId());
+        return ResponseEntity.created(location).build();
+
     }
 
     @GetMapping(value = "/{id}")
@@ -56,49 +52,42 @@ public class AutorController implements GenericController{ // Camada de entrada 
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<Object> excluirAutor(@PathVariable String id) {
-        try {
-            var idAutor = UUID.fromString(id);
-            Optional<Autor> autor = autorService.obterPorId(idAutor);
-            if (autor.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
-            autorService.excluir(autor.get());
-            return ResponseEntity.noContent().build();
-        } catch (OperacaoNaoPermitidaException e) {
-            var erro = ErroResposta.respostaPadrao(e.getMessage());
-            return ResponseEntity.status(erro.status()).body(erro);
+    public ResponseEntity<Void> excluirAutor(@PathVariable String id) {
+
+        var idAutor = UUID.fromString(id);
+        Optional<Autor> autor = autorService.obterPorId(idAutor);
+        if (autor.isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
+        autorService.excluir(autor.get());
+        return ResponseEntity.noContent().build();
 
     }
 
     @GetMapping
     public ResponseEntity<List<AutorDTO>> pesquisar(@RequestParam(value = "nome", required = false) String nome, @RequestParam(value = "nacionalidade", required = false) String nacionalidade) {
-        List<Autor> lista = autorService.pesquisaByExample(nome,nacionalidade);
+        List<Autor> lista = autorService.pesquisaByExample(nome, nacionalidade);
         List<AutorDTO> dto = lista.stream().map(autorMapper::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(dto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> atualizar(@PathVariable String id, @RequestBody @Valid AutorDTO dto) {
-        try {
-            var idAutor = UUID.fromString(id);
-            Optional<Autor> autor = autorService.obterPorId(idAutor);
+    public ResponseEntity<Void> atualizar(@PathVariable String id, @RequestBody @Valid AutorDTO dto) {
 
-            if (autor.isEmpty()) {
-                return ResponseEntity.notFound().build();
-            }
+        var idAutor = UUID.fromString(id);
+        Optional<Autor> autor = autorService.obterPorId(idAutor);
 
-            var resultado = autor.get();
-            resultado.setNome(dto.nome());
-            resultado.setDataNascimento(dto.dataNascimento());
-            resultado.setNacionalidade(dto.nacionalidade());
-            autorService.atualizar(resultado);
-            return ResponseEntity.noContent().build();
-        } catch (RegistroDuplicadoException e) {
-            var erroDTO = ErroResposta.conflito(e.getMessage());
-            return ResponseEntity.status(erroDTO.status()).body(erroDTO);
+        if (autor.isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
+
+        var resultado = autor.get();
+        resultado.setNome(dto.nome());
+        resultado.setDataNascimento(dto.dataNascimento());
+        resultado.setNacionalidade(dto.nacionalidade());
+        autorService.atualizar(resultado);
+        return ResponseEntity.noContent().build();
+
 
     }
 }
