@@ -7,6 +7,9 @@ import static io.github.aplaraujo.library_api_estudo.repositories.specs.LivroSpe
 
 import io.github.aplaraujo.library_api_estudo.validators.LivroValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +36,7 @@ public class LivroService {
         livroRepository.delete(livro);
     }
 
-    public List<Livro> pesquisa(String isbn, String nomeAutor, String titulo, GeneroLivro genero, Integer anoPublicacao) {
+    public Page<Livro> pesquisa(String isbn, String nomeAutor, String titulo, GeneroLivro genero, Integer anoPublicacao, Integer pagina, Integer tamanhoPagina) {
         // select * from livro where 0 = 0
         Specification<Livro> specification = Specification
                 .where((root, query, criteriaBuilder) -> criteriaBuilder.conjunction());
@@ -58,7 +61,8 @@ public class LivroService {
             specification = specification.and(nomeAutorLike(nomeAutor));
         }
 
-        return livroRepository.findAll();
+        Pageable pageable = PageRequest.of(pagina, tamanhoPagina);
+        return livroRepository.findAll(specification, pageable);
     }
 
     public void atualizar(Livro livro) {
