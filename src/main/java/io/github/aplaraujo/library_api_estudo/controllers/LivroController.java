@@ -2,6 +2,7 @@ package io.github.aplaraujo.library_api_estudo.controllers;
 
 import io.github.aplaraujo.library_api_estudo.controllers.dto.CadastroLivroDTO;
 import io.github.aplaraujo.library_api_estudo.controllers.dto.ErroResposta;
+import io.github.aplaraujo.library_api_estudo.controllers.dto.PesquisaLivroDTO;
 import io.github.aplaraujo.library_api_estudo.controllers.mappers.LivroMapper;
 import io.github.aplaraujo.library_api_estudo.exceptions.RegistroDuplicadoException;
 import io.github.aplaraujo.library_api_estudo.model.Livro;
@@ -9,10 +10,9 @@ import io.github.aplaraujo.library_api_estudo.services.LivroService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/livros")
@@ -32,5 +32,13 @@ public class LivroController implements GenericController {
         var url = gerarHeaderLocation(livro.getId());
         return ResponseEntity.created(url).build();
 
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<PesquisaLivroDTO> obterDetalhes(@PathVariable("id") String id) {
+        return livroService.obterPorId(UUID.fromString(id)).map(livro -> {
+            var dto = livroMapper.toDTO(livro);
+            return ResponseEntity.ok(dto);
+        }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
