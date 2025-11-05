@@ -1,6 +1,5 @@
 package io.github.aplaraujo.library_api_estudo.controllers.dto;
 
-import io.github.aplaraujo.library_api_estudo.model.Autor;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -27,11 +26,4 @@ public record AutorDTO(
         @Size(min = 3, max = 50, message = "Campo fora do tamanho padrão")
         String nacionalidade) {
 
-    public Autor mapearParaAutor() {
-        Autor autor = new Autor();
-        autor.setNome(this.nome);
-        autor.setDataNascimento(this.dataNascimento);
-        autor.setNacionalidade(this.nacionalidade);
-        return autor;
-    }
 }
