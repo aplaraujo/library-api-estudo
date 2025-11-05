@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/livros")
 @RequiredArgsConstructor
-public class LivroController {
+public class LivroController implements GenericController {
     private final LivroService livroService;
     private final LivroMapper livroMapper;
 
@@ -30,7 +30,8 @@ public class LivroController {
             livroService.salvar(livro);
             // Criar url de acesso dos dados do livro
             // Retornar código criado com cabeçalho
-            return ResponseEntity.ok(livro);
+            var url = gerarHeaderLocation(livro.getId());
+            return ResponseEntity.created(url).build();
         } catch (RegistroDuplicadoException e) {
             var erro = ErroResposta.conflito(e.getMessage());
             return ResponseEntity.status(erro.status()).body(erro);

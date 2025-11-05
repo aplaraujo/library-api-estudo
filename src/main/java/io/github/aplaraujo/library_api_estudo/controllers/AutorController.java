@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/autores") // http://localhost:8080/autores
 @RequiredArgsConstructor
-public class AutorController { // Camada de entrada de dados do sistema
+public class AutorController implements GenericController{ // Camada de entrada de dados do sistema
 
     private final AutorService autorService;
     private final AutorMapper autorMapper;
@@ -35,7 +35,7 @@ public class AutorController { // Camada de entrada de dados do sistema
         try {
             Autor autor = autorMapper.toEntity(dto);
             autorService.salvar(autor);
-            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(autor.getId()).toUri();
+            URI location = gerarHeaderLocation(autor.getId());
             return ResponseEntity.created(location).build();
         } catch (RegistroDuplicadoException e) {
             var erroDTO = ErroResposta.conflito(e.getMessage());
