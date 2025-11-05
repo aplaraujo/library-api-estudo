@@ -4,10 +4,7 @@ import io.github.aplaraujo.library_api_estudo.model.Autor;
 import io.github.aplaraujo.library_api_estudo.model.GeneroLivro;
 import io.github.aplaraujo.library_api_estudo.model.Livro;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +14,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface LivroRepository extends JpaRepository<Livro, UUID> {
+// JpaSpecificationExecutor - adiciona os mesmos métodos de pesquisa, recebendo um objeto do tipo Specification
+public interface LivroRepository extends JpaRepository<Livro, UUID>, JpaSpecificationExecutor<Livro> {
     // select * from livro where id_autor = id
     List<Livro> findByAutor(Autor autor);
 
