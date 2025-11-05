@@ -2,6 +2,7 @@ package io.github.aplaraujo.library_api_estudo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,6 +29,7 @@ public class SecurityConfiguration {
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(http -> {
                     http.requestMatchers("/login/**").permitAll();
+                    http.requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll();
                     http.requestMatchers("/autores/**").hasRole("ADMIN");
                     http.requestMatchers("/livros/**").hasAnyRole("USER", "ADMIN");
                     http.anyRequest().authenticated();
