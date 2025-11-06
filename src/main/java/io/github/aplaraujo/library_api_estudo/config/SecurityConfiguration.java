@@ -1,6 +1,7 @@
 package io.github.aplaraujo.library_api_estudo.config;
 
 import io.github.aplaraujo.library_api_estudo.security.CustomUserDetailsService;
+import io.github.aplaraujo.library_api_estudo.security.LoginSocialSuccessHandler;
 import io.github.aplaraujo.library_api_estudo.services.UsuarioService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +28,7 @@ import java.time.Duration;
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, LoginSocialSuccessHandler successHandler) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
 //                .formLogin(configurer -> {
@@ -40,7 +41,9 @@ public class SecurityConfiguration {
                     http.requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll();
                     http.anyRequest().authenticated();
                 })
-                .oauth2Login(Customizer.withDefaults())
+                .oauth2Login(auth -> {
+                    auth.successHandler(successHandler);
+                })
                 .build();
     }
 

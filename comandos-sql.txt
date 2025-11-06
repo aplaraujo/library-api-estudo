@@ -22,6 +22,9 @@ CREATE TABLE livro (
   constraint chk_genero check (genero in ('FICCAO', 'FANTASIA', 'MISTERIO', 'ROMANCE', 'BIOGRAFIA', 'CIENCIA'))
 );
 
+DROP TABLE usuario;
+ALTER TABLE usuario add COLUMN email varchar(150) not null;
+
 CREATE TABLE usuario (
   id uuid not null primary key,
   login varchar(20) not null unique,
