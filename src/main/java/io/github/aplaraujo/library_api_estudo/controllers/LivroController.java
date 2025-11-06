@@ -1,11 +1,8 @@
 package io.github.aplaraujo.library_api_estudo.controllers;
 
 import io.github.aplaraujo.library_api_estudo.controllers.dto.CadastroLivroDTO;
-import io.github.aplaraujo.library_api_estudo.controllers.dto.ErroResposta;
 import io.github.aplaraujo.library_api_estudo.controllers.dto.PesquisaLivroDTO;
 import io.github.aplaraujo.library_api_estudo.controllers.mappers.LivroMapper;
-import io.github.aplaraujo.library_api_estudo.exceptions.RegistroDuplicadoException;
-import io.github.aplaraujo.library_api_estudo.model.Autor;
 import io.github.aplaraujo.library_api_estudo.model.GeneroLivro;
 import io.github.aplaraujo.library_api_estudo.model.Livro;
 import io.github.aplaraujo.library_api_estudo.services.LivroService;
@@ -13,12 +10,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/livros")
@@ -28,6 +23,7 @@ public class LivroController implements GenericController {
     private final LivroMapper livroMapper;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<Void> salvar(@RequestBody @Valid CadastroLivroDTO dto) {
         // Mapear dto para a entidade
         Livro livro = livroMapper.toEntity(dto);
@@ -41,6 +37,7 @@ public class LivroController implements GenericController {
     }
 
     @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<PesquisaLivroDTO> obterDetalhes(@PathVariable("id") String id) {
         return livroService.obterPorId(UUID.fromString(id)).map(livro -> {
             var dto = livroMapper.toDTO(livro);
@@ -49,6 +46,7 @@ public class LivroController implements GenericController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<Object> excluirLivro(@PathVariable String id) {
         var livroId = UUID.fromString(id);
         return livroService.obterPorId(livroId).map(livro -> {
@@ -58,6 +56,7 @@ public class LivroController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<Page<PesquisaLivroDTO>> pesquisa(
             @RequestParam(value = "isbn", required = false)
             String isbn,
@@ -81,6 +80,7 @@ public class LivroController implements GenericController {
     }
 
     @PutMapping(value = "/{id}")
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<Object> atualizar(@PathVariable("id") String id, @RequestBody @Valid CadastroLivroDTO dto) {
         return livroService.obterPorId(UUID.fromString(id)).map(livro -> {
             Livro entity = livroMapper.toEntity(dto);

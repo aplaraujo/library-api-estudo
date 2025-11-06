@@ -10,6 +10,7 @@ import io.github.aplaraujo.library_api_estudo.services.AutorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -31,6 +32,7 @@ public class AutorController implements GenericController { // Camada de entrada
     // Response Entity - classe que representa uma resposta a uma requisição
 //    @RequestMapping(method = RequestMethod.POST)
     @PostMapping
+    @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<Void> salvar(@RequestBody @Valid AutorDTO dto) {
         Autor autor = autorMapper.toEntity(dto);
         autorService.salvar(autor);
@@ -40,6 +42,7 @@ public class AutorController implements GenericController { // Camada de entrada
     }
 
     @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAnyRole('GERENTE', 'OPERADOR')")
     public ResponseEntity<AutorDTO> obterDetalhes(@PathVariable("id") String id) {
         var idAutor = UUID.fromString(id);
 
@@ -52,6 +55,7 @@ public class AutorController implements GenericController { // Camada de entrada
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<Void> excluirAutor(@PathVariable String id) {
 
         var idAutor = UUID.fromString(id);
@@ -65,6 +69,7 @@ public class AutorController implements GenericController { // Camada de entrada
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('GERENTE', 'OPERADOR')")
     public ResponseEntity<List<AutorDTO>> pesquisar(@RequestParam(value = "nome", required = false) String nome, @RequestParam(value = "nacionalidade", required = false) String nacionalidade) {
         List<Autor> lista = autorService.pesquisaByExample(nome, nacionalidade);
         List<AutorDTO> dto = lista.stream().map(autorMapper::toDTO).collect(Collectors.toList());
@@ -72,6 +77,7 @@ public class AutorController implements GenericController { // Camada de entrada
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('GERENTE')")
     public ResponseEntity<Void> atualizar(@PathVariable String id, @RequestBody @Valid AutorDTO dto) {
 
         var idAutor = UUID.fromString(id);
