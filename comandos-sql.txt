@@ -27,7 +27,8 @@ ALTER TABLE usuario add COLUMN email varchar(150) not null;
 
 CREATE TABLE usuario (
   id uuid not null primary key,
-  login varchar(20) not null unique,
+  login varchar(100) not null unique,
+  email varchar(300) not null,
   senha varchar(300) not null,
   roles varchar[]
 );
