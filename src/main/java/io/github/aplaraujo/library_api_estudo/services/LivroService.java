@@ -2,9 +2,11 @@ package io.github.aplaraujo.library_api_estudo.services;
 
 import io.github.aplaraujo.library_api_estudo.model.GeneroLivro;
 import io.github.aplaraujo.library_api_estudo.model.Livro;
+import io.github.aplaraujo.library_api_estudo.model.Usuario;
 import io.github.aplaraujo.library_api_estudo.repositories.LivroRepository;
 import static io.github.aplaraujo.library_api_estudo.repositories.specs.LivroSpecs.*;
 
+import io.github.aplaraujo.library_api_estudo.security.SecurityService;
 import io.github.aplaraujo.library_api_estudo.validators.LivroValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,9 +24,12 @@ import java.util.UUID;
 public class LivroService {
     private final LivroRepository livroRepository;
     private final LivroValidator livroValidator;
+    private final SecurityService securityService;
 
     public Livro salvar(Livro livro) {
         livroValidator.validar(livro);
+        Usuario usuario = securityService.obterUsuarioAutenticado();
+        livro.setUsuario(usuario);
         return livroRepository.save(livro);
     }
 

@@ -6,11 +6,16 @@ import io.github.aplaraujo.library_api_estudo.controllers.mappers.AutorMapper;
 import io.github.aplaraujo.library_api_estudo.exceptions.OperacaoNaoPermitidaException;
 import io.github.aplaraujo.library_api_estudo.exceptions.RegistroDuplicadoException;
 import io.github.aplaraujo.library_api_estudo.model.Autor;
+import io.github.aplaraujo.library_api_estudo.model.Usuario;
+import io.github.aplaraujo.library_api_estudo.security.SecurityService;
 import io.github.aplaraujo.library_api_estudo.services.AutorService;
+import io.github.aplaraujo.library_api_estudo.services.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 

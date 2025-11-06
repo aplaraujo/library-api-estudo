@@ -2,8 +2,10 @@ package io.github.aplaraujo.library_api_estudo.services;
 
 import io.github.aplaraujo.library_api_estudo.exceptions.OperacaoNaoPermitidaException;
 import io.github.aplaraujo.library_api_estudo.model.Autor;
+import io.github.aplaraujo.library_api_estudo.model.Usuario;
 import io.github.aplaraujo.library_api_estudo.repositories.AutorRepository;
 import io.github.aplaraujo.library_api_estudo.repositories.LivroRepository;
+import io.github.aplaraujo.library_api_estudo.security.SecurityService;
 import io.github.aplaraujo.library_api_estudo.validators.AutorValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
@@ -21,9 +23,12 @@ public class AutorService {
     private final AutorRepository autorRepository;
     private final AutorValidator autorValidator;
     private final LivroRepository livroRepository;
+    private final SecurityService securityService;
 
     public Autor salvar(Autor autor) {
         autorValidator.validar(autor);
+        Usuario usuario = securityService.obterUsuarioAutenticado();
+        autor.setUsuario(usuario);
         return autorRepository.save(autor);
     }
 
