@@ -1,0 +1,80 @@
+package io.github.aplaraujo.library_api_estudo.services;
+
+import io.github.aplaraujo.library_api_estudo.model.GeneroLivro;
+import io.github.aplaraujo.library_api_estudo.model.Livro;
+import io.github.aplaraujo.library_api_estudo.model.Usuario;
+import io.github.aplaraujo.library_api_estudo.repositories.LivroRepository;
+import static io.github.aplaraujo.library_api_estudo.repositories.specs.LivroSpecs.*;
+
+import io.github.aplaraujo.library_api_estudo.security.SecurityService;
+import io.github.aplaraujo.library_api_estudo.validators.LivroValidator;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+@RequiredArgsConstructor
+public class LivroService {
+    private final LivroRepository livroRepository;
+    private final LivroValidator livroValidator;
+    private final SecurityService securityService;
+
+    public Livro salvar(Livro livro) {
+        livroValidator.validar(livro);
+        Usuario usuario = securityService.obterUsuarioAutenticado();
+        livro.setUsuario(usuario);
+        return livroRepository.save(livro);
+    }
+
+    public Optional<Livro> obterPorId(UUID id) {
+        return livroRepository.findWithAutorById(id);
+    }
+
+    public void excluir(Livro livro) {
+        livroRepository.delete(livro);
+    }
+
+    public Page<Livro> pesquisa(String isbn, String nomeAutor, String titulo, GeneroLivro genero, Integer anoPublicacao, Integer pagina, Integer tamanhoPagina) {
+        // select * from livro where 0 = 0
+        Specification<Livro> specification = Specification
+                .where((root, query, criteriaBuilder) -> criteriaBuilder.conjunction());
+        if (isbn != null) {
+            // query = query and isbn = :isbn
+            specification = specification.and(isbnEqual(isbn));
+        }
+
+        if (titulo != null) {
+            specification = specification.and(tituloLike(titulo));
+        }
+
+        if (genero != null) {
+            specification = specification.and(generoEqual(genero));
+        }
+
+        if (anoPublicacao != null) {
+            specification = specification.and(anoPublicacaoEqual(anoPublicacao));
+        }
+
+        if (nomeAutor != null) {
+            specification = specification.and(nomeAutorLike(nomeAutor));
+        }
+
+        Pageable pageable = PageRequest.of(pagina, tamanhoPagina);
+        return livroRepository.findAll(specification, pageable);
+    }
+
+    public void atualizar(Livro livro) {
+        if (livro.getId() == null) {
+            throw new IllegalArgumentException("Livro não encontrado!");
+        }
+        livroValidator.validar(livro);
+        livroRepository.save(livro);
+    }
+}
