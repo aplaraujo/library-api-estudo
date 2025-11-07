@@ -51,12 +51,15 @@ public class AuthorizationServerConfiguration {
         return new BCryptPasswordEncoder(10);
     }
 
+    // access_token: token usado para requisições
+    // refresh_token: token usado para renovar o access_token
     @Bean
     public TokenSettings tokenSettings() {
         return TokenSettings
                 .builder()
                 .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
                 .accessTokenTimeToLive(Duration.ofMinutes(60))
+                .refreshTokenTimeToLive(Duration.ofMinutes(90))
                 .build();
     }
 

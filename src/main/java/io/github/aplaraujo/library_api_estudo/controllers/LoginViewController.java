@@ -4,6 +4,7 @@ import io.github.aplaraujo.library_api_estudo.security.CustomAuthentication;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller // Controller - anotação para uso de páginas web
@@ -21,5 +22,11 @@ public class LoginViewController {
             System.out.println(customAuthentication.getUsuario());
         }
         return "Olá " + authentication.getName();
+    }
+
+    @GetMapping("/authorized")
+    @ResponseBody
+    public String getAuthorizationCode(@RequestParam(value = "code") String code) {
+        return "Seu código de autorização: " + code;
     }
 }

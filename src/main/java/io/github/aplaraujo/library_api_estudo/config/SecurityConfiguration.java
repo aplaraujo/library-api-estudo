@@ -45,19 +45,6 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public JwtDecoder jwtDecoder() {
-        NimbusJwtDecoder jwtDecoder = JwtDecoders.fromOidcIssuerLocation("https://accounts.google.com");
-
-        OAuth2TokenValidator<Jwt> withClockSkew = new JwtTimestampValidator(Duration.ofMinutes(5));
-        OAuth2TokenValidator<Jwt> withIssuer = JwtValidators.createDefaultWithIssuer("https://accounts.google.com");
-
-        OAuth2TokenValidator<Jwt> validator = new DelegatingOAuth2TokenValidator<>(withIssuer, withClockSkew);
-        jwtDecoder.setJwtValidator(validator);
-
-        return jwtDecoder;
-    }
-
-    @Bean
     public GrantedAuthorityDefaults grantedAuthorityDefaults() {
         return new GrantedAuthorityDefaults("");
     }
