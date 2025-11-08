@@ -29,7 +29,6 @@ public class SecurityConfiguration {
                 .formLogin(configurer -> {
                     configurer.loginPage("/login");
                 })
-                .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(http -> {
                     http.requestMatchers("/login/**").permitAll();
                     http.requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll();
