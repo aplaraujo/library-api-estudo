@@ -1,8 +1,9 @@
 spring:
   application:
     name: library-api-estudo
-  profiles:
-    active: producao
+#  profiles:
+#    active: production
+# SPRING_PROFILES_ACTIVE=production
   output:
     ansi:
       enabled: ALWAYS
@@ -50,6 +51,24 @@ management:
 
 springdoc:
   override-with-generic-response: false
+
+# Separação de ambientes - produção
+---
+spring:
+  config:
+    activate:
+      on-profile: production
+    jpa:
+      show-sql: false
+
+# Separação de ambientes - homologação
+---
+spring:
+  config:
+    activate:
+      on-profile: homologacao
+    jpa:
+      show-sql: false
 
 #Ordem de abrangência:
 #trace - rastreamento minuncioso
