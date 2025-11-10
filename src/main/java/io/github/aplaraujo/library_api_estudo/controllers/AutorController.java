@@ -43,6 +43,7 @@ public class AutorController implements GenericController { // Camada de entrada
             @ApiResponse(responseCode = "409", description = "Autor já cadastrado")
     })
     public ResponseEntity<Void> salvar(@RequestBody @Valid AutorDTO dto) {
+        log.info("Cadastrando novo autor: {}", dto.nome());
         Autor autor = autorMapper.toEntity(dto);
         autorService.salvar(autor);
         URI location = gerarHeaderLocation(autor.getId());
@@ -77,6 +78,7 @@ public class AutorController implements GenericController { // Camada de entrada
             @ApiResponse(responseCode = "400", description = "Autor con livro cadastrado")
     })
     public ResponseEntity<Void> excluirAutor(@PathVariable String id) {
+        log.info("Excluindo autor de ID: {}", id);
 
         var idAutor = UUID.fromString(id);
         Optional<Autor> autor = autorService.obterPorId(idAutor);
@@ -95,8 +97,7 @@ public class AutorController implements GenericController { // Camada de entrada
             @ApiResponse(responseCode = "200", description = "Sucesso")
     })
     public ResponseEntity<List<AutorDTO>> pesquisar(@RequestParam(value = "nome", required = false) String nome, @RequestParam(value = "nacionalidade", required = false) String nacionalidade) {
-        log.info("Pesquisa autores");
-        
+
         List<Autor> lista = autorService.pesquisaByExample(nome, nacionalidade);
         List<AutorDTO> dto = lista.stream().map(autorMapper::toDTO).collect(Collectors.toList());
         return ResponseEntity.ok(dto);
