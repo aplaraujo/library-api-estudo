@@ -15,3 +15,15 @@ docker run --name pgadmin4 -p 15432:80 -e PGADMIN_DEFAULT_EMAIL=admin@admin.com 
 Referência da rede do Docker no Pgadmin4: nome-do-contêiner do banco de dados
 
 Verificar porta: netstat -aof | findstr 5432
+
+docker run --name libraryapi-producao -e DATASOURCE_URL=jdbc:postgresql://librarydb-prod:5432/library-prod -e DATASOURCE_USERNAME=postgresprod -e DATASOURCE_PASSWORD=postgresprod --network library-network -d -p 8080:8080 -p 9090:9090 ananopaisdojavascript/libraryapi
+
+docker images
+
+docker build --tag ananopaisdojavascript/libraryapi .
+
+docker tag ananopaisdojavascript/libraryapi ananopaisdojavascript/libraryapi (Subir imagem para Docker Hub)
+
+docker login
+
+docker push ananopaisdojavascript/libraryapi
