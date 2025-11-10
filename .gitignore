@@ -31,10 +31,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-# application.yaml com credenciais
-src/main/resources/application.yaml
-src/main/resources/application.yml
-
-# Mantenha apenas o template
-!src/main/resources/application-template.yaml

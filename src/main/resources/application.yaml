@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: library-api-estudo
+  profiles:
+    active: producao
+  output:
+    ansi:
+      enabled: ALWAYS
+  datasource:
+    url: jdbc:postgresql://localhost:5433/library
+    username: postgres
+    password: 1234567
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+#      ddl-auto: update
+      ddl-auto: none
+    properties:
+      hibernate.format_sql: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+
+logging:
+  pattern:
+    console: '%clr(%d{dd-MM-yyyy HH:mm:ss}){faint} %clr(%5p) %clr([%t]){faint} %clr(%-40.40logger){cyan} %clr(:){yellow} %m%n'
+  file:
+    name: app.log
+  level:
+    root: warn
+    io:
+      github:
+        aplaraujo: trace
+    org:
+      springframework:
+        web: debug
+
+management:
+  server:
+    port: 9090
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+springdoc:
+  override-with-generic-response: false
+
+#Ordem de abrangência:
+#trace - rastreamento minuncioso
+#debug - informações de depuração
+#info - informações gerais sobre o funcionamento da aplicação
+#warn - eventos problemáticos
+#error - erros que impedem uma operação específica

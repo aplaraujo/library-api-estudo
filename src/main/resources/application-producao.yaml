@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: library-api-estudo-producao
+  jpa:
+    show-sql: false
